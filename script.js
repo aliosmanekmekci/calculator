@@ -1,11 +1,14 @@
 const display = document.querySelector("#display");
 const button = document.querySelectorAll(".btn");
 
-button.forEach((btn) =>
+button.forEach((btn) => {
   btn.addEventListener("click", (e) => {
-    console.log(e.target.textContent);
-  })
-);
+    console.log(e.textContent);
+  });
+  console.log(btn.textContent);
+});
+
+//
 
 function add() {}
 function substract() {}
