@@ -1,13 +1,54 @@
-let runningTotal = 0;
-let buffer = "0";
-let previousOperator;
-const screen = document.querySelector(".screen");
+const display = document.querySelector("#display");
+const button = document.querySelectorAll("button");
 
-function buttonClick(value) {
-  isNaN(parseInt(value)) ? handleSymbol(value) : handleNumber(value);
+let firstValue = "";
+let currentOperator = null;
+let secondValue = "";
+
+function bindClick(value) {
+  const targetNode = value.target;
+  const intTargetNode = parseInt(targetNode.textContent);
+  if (isNaN(intTargetNode) && firstValue) {
+    handleSymbol(value);
+  }
+  currentOperator
+    ? firstValue && currentOperator && !isNaN(intTargetNode)
+      ? (secondValue += targetNode.textContent)
+      : secondValue
+    : (firstValue += targetNode.textContent);
+
+  console.log(`first value: ${firstValue} & second value: ${secondValue}`);
 }
 
-function handleNumber(value) {
-  buffer === "0" ? (buffer = value) : (buffer += value);
+function handleSymbol(symbol) {
+  const targetNode = symbol.target;
+  const symbolValue = targetNode.textContent;
+  currentOperator = symbolValue;
+
+  if (symbolValue === "=") {
+  } else {
+    switch (symbolValue) {
+      case "+":
+        break;
+
+      default:
+        break;
+    }
+  }
+  console.log(currentOperator);
 }
-function handleSymbol(value) {}
+
+button.forEach((btn) => btn.addEventListener("click", (e) => bindClick(e)));
+
+function add(a, b) {
+  return a + b;
+}
+function substract(a, b) {
+  return a - b;
+}
+function divide(a, b) {
+  return a / b;
+}
+function multiply(a, b) {
+  return a * b;
+}
