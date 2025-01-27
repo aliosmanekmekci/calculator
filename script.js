@@ -73,8 +73,10 @@ function getResult() {
       result = prevNum * nextNum;
       break;
   }
+  prevNum = result;
+  prevOperator = null;
+  nextNum = null;
   display.textContent = result;
-  return result;
 }
 
 function reset() {
