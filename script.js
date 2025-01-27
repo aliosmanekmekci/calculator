@@ -1,54 +1,89 @@
-const display = document.querySelector("#display");
+const display = document.querySelector(".screen");
 const button = document.querySelectorAll("button");
 
-let firstValue = "";
+let prevOperator = null;
 let currentOperator = null;
-let secondValue = "";
+let prevNum = null;
+let nextNum = null;
 
-function bindClick(value) {
-  const targetNode = value.target;
-  const intTargetNode = parseInt(targetNode.textContent);
-  if (isNaN(intTargetNode) && firstValue) {
-    handleSymbol(value);
-  }
-  currentOperator
-    ? firstValue && currentOperator && !isNaN(intTargetNode)
-      ? (secondValue += targetNode.textContent)
-      : secondValue
-    : (firstValue += targetNode.textContent);
+function bindClick(param) {
+  const targetNode = param.target;
+  const targetValue = targetNode.textContent;
+  const targetAttribute = targetNode.getAttribute("data-type");
 
-  console.log(`first value: ${firstValue} & second value: ${secondValue}`);
+  targetAttribute.includes("number") ? handleNumber(targetValue) : handleSymbol(targetNode);
+}
+
+function handleNumber(number) {
+  display.textContent === "0" ? (display.textContent = number) : (display.textContent += number);
 }
 
 function handleSymbol(symbol) {
-  const targetNode = symbol.target;
-  const symbolValue = targetNode.textContent;
-  currentOperator = symbolValue;
-
-  if (symbolValue === "=") {
-  } else {
-    switch (symbolValue) {
-      case "+":
-        break;
-
-      default:
-        break;
-    }
+  currentOperator = symbol.textContent;
+  switch (currentOperator) {
+    case "C":
+      reset();
+      break;
+    case "←":
+      let displayContent = display.textContent;
+      display.textContent = displayContent.slice(0, -1);
+      display.textContent ? display.textContent : (display.textContent = "0");
+      break;
+    case "=":
+      getResult();
+      break;
+    case "+":
+      prevOperator = "+";
+      prevNum = parseInt(display.textContent);
+      display.textContent = "0";
+      break;
+    case "-":
+      prevOperator = "-";
+      prevNum = parseInt(display.textContent);
+      display.textContent = "0";
+      break;
+    case "/":
+      prevNum = parseInt(display.textContent);
+      prevOperator = "/";
+      display.textContent = "0";
+      break;
+    case "×":
+      prevOperator = "×";
+      prevNum = parseInt(display.textContent);
+      display.textContent = "0";
+      break;
   }
-  console.log(currentOperator);
+}
+
+function getResult() {
+  nextNum = parseInt(display.textContent);
+  let result;
+
+  switch (prevOperator) {
+    case "+":
+      result = prevNum + nextNum;
+      break;
+    case "-":
+      result = prevNum - nextNum;
+      break;
+    case "/":
+      result = prevNum / nextNum;
+      break;
+    case "×":
+      result = prevNum * nextNum;
+      break;
+  }
+  display.textContent = result;
+  return result;
+}
+
+function reset() {
+  display.textContent = "0";
+
+  prevOperator = null;
+  currentOperator = null;
+  prevNum = null;
+  nextNum = null;
 }
 
 button.forEach((btn) => btn.addEventListener("click", (e) => bindClick(e)));
-
-function add(a, b) {
-  return a + b;
-}
-function substract(a, b) {
-  return a - b;
-}
-function divide(a, b) {
-  return a / b;
-}
-function multiply(a, b) {
-  return a * b;
-}
